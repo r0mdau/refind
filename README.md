@@ -32,5 +32,9 @@ docker-compose down
 
 In this example, Weaviate is returning biology-related entries.
 
+## Goal
+
+[The ChatGPT Retrieval plugin](https://weaviate.io/blog/weaviate-retrieval-plugin).
+
 [Weaviate]: https://weaviate.io
 [OpenAI]: https://openai.com/
