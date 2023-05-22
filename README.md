@@ -25,6 +25,9 @@ go run import.go
 
 # query data related to biology
 go run query.go | jq .
+
+# when done, gracefully shutdown
+docker-compose down
 ```
 
 In this example, Weaviate is returning biology-related entries.
