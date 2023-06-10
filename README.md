@@ -32,6 +32,19 @@ docker-compose down
 
 In this example, Weaviate is returning biology-related entries.
 
+Weaviate operations
+
+```bash
+# get the schema
+curl -s http://localhost:8080/v1/schema | jq .
+
+# get one class from the schema
+curl -s http://localhost:8080/v1/schema/Question | jq .
+
+# delete a class
+curl -s -XDELETE http://localhost:8080/v1/schema/Question | jq .
+```
+
 ## Goal
 
 [The ChatGPT Retrieval plugin](https://weaviate.io/blog/weaviate-retrieval-plugin).
