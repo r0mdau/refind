@@ -3,6 +3,16 @@
 Refind is a project to store my personnal documents in a [Weaviate] vector
  database and use [OpenAI] vectorizer module and generative search.
 
+Here is a shell recording with [asciinema](https://asciinema.org/) showing the
+different answers with the same input question from :
+
+1. the current ChatGPt version (using [sgpt](https://github.com/TheR1D/shell_gpt) cli)
+1. the generative search with Weaviate containing a sample document from the
+[Enteprise Roadmap to SRE](https://sre.google/resources/practices-and-processes/enterprise-roadmap-to-sre/)
+book
+
+![shell](demo.svg)
+
 ## Getting started
 
 Create and provide your OpenAI API key :
