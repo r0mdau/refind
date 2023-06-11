@@ -29,9 +29,9 @@ func main() {
 
 	nearText := client.GraphQL().
 		NearTextArgBuilder().
-		WithConcepts([]string{"software"})
+		WithConcepts([]string{"software", "reliability"})
 
-	gs := graphql.NewGenerativeSearch().SingleResult("Describe the following as a Director of engineering in less that 50 words: {content}")
+	gs := graphql.NewGenerativeSearch().SingleResult("Summarize where to start in adopting SRE in enterprise {content}")
 	//gs := graphql.NewGenerativeSearch().GroupedResult("Explain why these documents are about engineering levels")
 
 	result, err := client.GraphQL().Get().
