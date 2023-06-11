@@ -1,4 +1,2 @@
-.data/
 __pycache__/
 venv/
-import_docs/
