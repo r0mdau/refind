@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"net/http"
+	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/weaviate/weaviate-go-client/v4/weaviate"
@@ -23,10 +23,15 @@ func main() {
 		panic(err)
 	}
 
-	// add the schema
+	// create a class
 	classObj := &models.Class{
-		Class:      "Question",
-		Vectorizer: "text2vec-openai",
+		Class:      "Document",
+		Vectorizer: "text2vec-openai", // If set to "none" you must always provide vectors yourself. Could be any other "text2vec-*" also.
+		ModuleConfig: map[string]interface{}{
+			"generative-openai": map[string]interface{}{
+				"model": "gpt-3.5-turbo",
+			},
+		},
 	}
 
 	if client.Schema().ClassCreator().WithClass(classObj).Do(context.Background()) != nil {
@@ -34,7 +39,7 @@ func main() {
 	}
 
 	// Retrieve the data
-	items, err := getJSONdata()
+	items, err := getData()
 	if err != nil {
 		panic(err)
 	}
@@ -43,20 +48,16 @@ func main() {
 	objects := make([]*models.Object, len(items))
 	for i := range items {
 		objects[i] = &models.Object{
-			Class: "Question",
+			Class: "Document",
 			Properties: map[string]any{
-				"category": items[i]["Category"],
-				"question": items[i]["Question"],
-				"answer":   items[i]["Answer"],
+				"content": items[i],
 			},
 		}
 	}
 
 	// batch write items
 	batchRes, err := client.Batch().ObjectsBatcher().WithObjects(objects...).Do(context.Background())
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 	for _, res := range batchRes {
 		if res.Result.Errors != nil {
 			panic(res.Result.Errors.Error)
@@ -64,18 +65,35 @@ func main() {
 	}
 }
 
-func getJSONdata() ([]map[string]string, error) {
-	// Retrieve the data
-	data, err := http.DefaultClient.Get("https://raw.githubusercontent.com/weaviate-tutorials/quickstart/main/data/jeopardy_tiny.json")
-	if err != nil {
-		return nil, err
-	}
-	defer data.Body.Close()
+func getData() ([]string, error) {
+	var items []string
 
-	// Decode the data
-	var items []map[string]string
-	if err := json.NewDecoder(data.Body).Decode(&items); err != nil {
-		return nil, err
+	folderPath := "import_docs"
+
+	// Open the folder
+	folder, err := os.Open(folderPath)
+	check(err)
+	defer folder.Close()
+
+	// Read all the file names in the folder
+	fileNames, err := folder.Readdirnames(0)
+	check(err)
+
+	// Iterate over the file names and print them
+	for _, fileName := range fileNames {
+		body, err := ioutil.ReadFile(folderPath + "/" + fileName)
+		if err != nil {
+			log.Fatalf("unable to read file: %v", err)
+		}
+
+		items = append(items, string(body))
 	}
+
 	return items, nil
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }

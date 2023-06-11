@@ -24,18 +24,20 @@ func main() {
 	}
 
 	fields := []graphql.Field{
-		{Name: "question"},
-		{Name: "answer"},
-		{Name: "category"},
+		{Name: "content"},
 	}
 
 	nearText := client.GraphQL().
 		NearTextArgBuilder().
-		WithConcepts([]string{"biology"})
+		WithConcepts([]string{"software"})
+
+	gs := graphql.NewGenerativeSearch().SingleResult("Describe the following as a Director of engineering in less that 50 words: {content}")
+	//gs := graphql.NewGenerativeSearch().GroupedResult("Explain why these documents are about engineering levels")
 
 	result, err := client.GraphQL().Get().
-		WithClassName("Question").
+		WithClassName("Document").
 		WithFields(fields...).
+		WithGenerativeSearch(gs).
 		WithNearText(nearText).
 		WithLimit(2).
 		Do(context.Background())
