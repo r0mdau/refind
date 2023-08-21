@@ -36,10 +36,10 @@ curl http://localhost:8080/v1/meta | jq .
 docker-compose logs
 
 # import data, DO IT ONCE
-go run import.go
+go run main.go import
 
 # query data related to software
-go run query.go | jq .
+go run main.go query | jq .
 
 # when done, gracefully shutdown
 docker-compose down
@@ -71,8 +71,7 @@ curl -s -XDELETE http://localhost:8080/v1/schema/Question | jq .
 
 1. automatically add more metadata in weaviate when ingesting documents
 1. automatically split documents bigger than the OpenAI token limit
-1. add query string as a flag when running the query.go script
-1. transform this project into a cli
+1. add query string as a flag when running the `query` command
 1. unit tests, let Copilot write them \o/
 
 ## Trying langchain
