@@ -14,6 +14,8 @@ import (
 	"github.com/weaviate/weaviate-go-client/v4/weaviate/graphql"
 )
 
+var Input string
+
 // queryCmd represents the query command
 var queryCmd = &cobra.Command{
 	Use:   "query",
@@ -41,7 +43,7 @@ The generative search is done using the OpenAI API.`,
 			NearTextArgBuilder().
 			WithConcepts([]string{"software", "reliability"})
 
-		gs := graphql.NewGenerativeSearch().SingleResult("Summarize where to start in adopting SRE in enterprise {content}")
+		gs := graphql.NewGenerativeSearch().SingleResult(fmt.Sprintf("%s {content}", Input))
 		//gs := graphql.NewGenerativeSearch().GroupedResult("Explain why these documents are about engineering levels")
 
 		result, err := client.GraphQL().Get().
@@ -67,13 +69,6 @@ The generative search is done using the OpenAI API.`,
 func init() {
 	rootCmd.AddCommand(queryCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// queryCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// queryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	queryCmd.Flags().StringVarP(&Input, "input", "i", "", "Input text (required)")
+	queryCmd.MarkFlagRequired("input")
 }
