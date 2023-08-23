@@ -41,16 +41,15 @@ The generative search is done using the OpenAI API.`,
 
 		nearText := client.GraphQL().
 			NearTextArgBuilder().
-			WithConcepts([]string{"software", "reliability"})
+			WithConcepts([]string{"incident", "reliability"})
 
-		gs := graphql.NewGenerativeSearch().SingleResult(fmt.Sprintf("%s {content}", Input))
-		//gs := graphql.NewGenerativeSearch().GroupedResult("Explain why these documents are about engineering levels")
+		gs := graphql.NewGenerativeSearch().GroupedResult(Input)
 
 		result, err := client.GraphQL().Get().
 			WithClassName("Document").
 			WithFields(fields...).
-			WithGenerativeSearch(gs).
 			WithNearText(nearText).
+			WithGenerativeSearch(gs).
 			WithLimit(2).
 			Do(context.Background())
 		if err != nil {
