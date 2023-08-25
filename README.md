@@ -53,11 +53,14 @@ Weaviate operations :
 # get the schema
 curl -s http://localhost:8080/v1/schema | jq .
 
+# get objects
+curl -s http://localhost:8080/v1/objects | jq .
+
 # get one class from the schema
-curl -s http://localhost:8080/v1/schema/Question | jq .
+curl -s http://localhost:8080/v1/schema/Chatbot | jq .
 
 # delete a class
-curl -s -XDELETE http://localhost:8080/v1/schema/Question | jq .
+curl -s -XDELETE http://localhost:8080/v1/schema/Chatbot | jq .
 ```
 
 ## Goal
